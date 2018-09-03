@@ -39,7 +39,6 @@
                 grid-template-columns: repeat(3, 1fr)
             }
         }
-
     </style>
 
 </head>
@@ -141,14 +140,13 @@
 
                 klon.querySelector("#ret-oprindelsesregion").textContent = ret.oprindelsesregion;
 
-                klon.querySelector("img").src = "imgs/small/" + ret.billede + "-sm.jpg";
+                klon.querySelector("img").src = "assets/imgs/small/" + ret.billede + "-sm.jpg";
 
 
                 //placer klon i html
                 modtager.appendChild(klon);
             });
         }
-
     </script>
 
 </body>
