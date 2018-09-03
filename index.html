@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bistro Babushka</title>
+    <link rel="stylesheet" href="">
+
+    <style>
+        img {
+            width: 300px;
+        }
+
+        article {
+            padding: 20px;
+        }
+
+        article:nth-child(odd) {
+            background: #ffaab7;
+
+        }
+
+
+        section {
+            border: 4px solid yellow;
+            padding: 10px;
+            display: grid;
+        }
+
+        @media screen and (min-width:480px) {
+            section {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+
+        @media screen and (min-width:900px) {
+            section {
+                grid-template-columns: repeat(3, 1fr)
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+        <nav>
+
+            <button class="Alle">Alle</button>
+            <button class="Forretter">Forretter</button>
+            <button class="Hovedretter">Hovedretter</button>
+            <button class="Desserter">Desserter</button>
+            <button class="Drikkevarer">Drikkevarer</button>
+        </nav>
+
+        <h1>Menu</h1>
+
+    </header>
+
+    <main class="ret-display">
+    </main>
+
+    <section id="menucontainer">
+
+        <template id="ret-template">
+            <article>
+
+             <!------- id --------->
+                <p id="ret-id"></p>
+                <!------- kategori --------->
+                <p id="ret-kategori"></p>
+                <!---------- Navn ------------------>
+                <h2 id="ret-navn"></h2>
+                 <!---------- pris ----------------->
+                <p id="ret-pris"></p>
+                <!------- kortbeskrivelse --------->
+                <p id="ret-kortbeskrivelse"></p>
+
+              <!------- langbeskrivelse --------->
+                <p id="ret-langbeskrivelse"></p>
+                <!------- oprindelsesregion --------->
+                <p id="ret-oprindelsesregion"></p>
+
+              <!---------- Billede ------------->
+               <img cla ss="ret-billede" src="" alt="">
+
+
+
+
+            </article>
+        </template>
+    </section>
+
+
+    <footer>
+        <p>Adresse:<br> Grønnegade 97 <br> 1234 København K</p>
+
+        <p>
+            Åbningstider: <br> Mandag - fredag 10:30 - 22:00 <br> Lørdag 12:00 - 23:00
+        </p>
+    </footer>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", hentJson);
+
+        let menu;
+
+        async function hentJson() {
+
+            let myJson = await fetch("menu.json");
+            menu = await myJson.json();
+            console.log(menu[0].navn);
+            visMenu();
+        }
+
+        function visMenu() {
+
+            let modtager = document.querySelector("#menucontainer");
+            let temp = document.querySelector("#ret-template");
+
+            //Løb personlisten igennem og lav en klon
+            menu.forEach(ret => {
+
+                let klon = temp.cloneNode(true).content;
+
+                klon.querySelector("#ret-id").textContent = ret.id;
+
+                klon.querySelector("#ret-kategori").textContent = ret.kategori;
+
+                klon.querySelector("#ret-navn").textContent = ret.navn;
+
+                klon.querySelector("#ret-pris").textContent = "pris " + ret.pris + ",-";
+
+                klon.querySelector("#ret-kortbeskrivelse").textContent = ret.kortbeskrivelse;
+
+                klon.querySelector("#ret-langbeskrivelse").textContent = ret.langbeskrivelse;
+
+                klon.querySelector("#ret-oprindelsesregion").textContent = ret.oprindelsesregion;
+
+                klon.querySelector("img").src = "imgs/small/" + ret.billede + "-sm.jpg";
+
+
+                //placer klon i html
+                modtager.appendChild(klon);
+            });
+        }
+
+    </script>
+
+</body>
+
+</html>
