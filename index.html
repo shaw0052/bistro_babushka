@@ -12,6 +12,12 @@
             width: 300px;
         }
 
+        /*
+        html {
+            background-color: darkorange;
+        }
+*/
+
         article {
             padding: 20px;
         }
@@ -39,59 +45,108 @@
                 grid-template-columns: repeat(3, 1fr)
             }
         }
+
     </style>
 
 </head>
 
+
 <body>
-
     <header>
-        <nav>
-
-            <button class="Alle">Alle</button>
-            <button class="Forretter">Forretter</button>
-            <button class="Hovedretter">Hovedretter</button>
-            <button class="Desserter">Desserter</button>
-            <button class="Drikkevarer">Drikkevarer</button>
-        </nav>
-
         <h1>Menu</h1>
-
+        <nav>
+            <button class="menu-item" data-menu="forretter">Forretter</button>
+            <button class="menu-item" data-menu="hovedretter">Hovedretter</button>
+            <button class="menu-item" data-menu="desserter">Desserter</button>
+            <button class="menu-item" data-menu="drikkevarer">Drikkevarer</button>
+        </nav>
     </header>
 
-    <main class="ret-display">
-    </main>
-
-    <section id="menucontainer">
-
-        <template id="ret-template">
-            <article>
-
-             <!------- id --------->
-                <p id="ret-id"></p>
-                <!------- kategori --------->
-                <p id="ret-kategori"></p>
-                <!---------- Navn ------------------>
-                <h2 id="ret-navn"></h2>
-                 <!---------- pris ----------------->
-                <p id="ret-pris"></p>
-                <!------- kortbeskrivelse --------->
-                <p id="ret-kortbeskrivelse"></p>
-
-              <!------- langbeskrivelse --------->
-                <p id="ret-langbeskrivelse"></p>
-                <!------- oprindelsesregion --------->
-                <p id="ret-oprindelsesregion"></p>
-
-              <!---------- Billede ------------->
-               <img cla ss="ret-billede" src="" alt="">
+    <section class="ret-display"> </section>
 
 
 
+    <!------- template ----------->
+    <template class="ret-template">
+     <article>
 
-            </article>
-        </template>
-    </section>
+        <p class="ret-id"> </p>
+        <p class="ret-kategori"> </p>
+         <h2 class="ret-navn"> </h2>
+          <p class="ret-pris"> </p>
+           <p class="ret-kortbeskrivelse"> </p>
+            <p class="ret-langbeskrivelse"> </p>
+            <p class="ret-oprindelsesregion"> </p>
+         <img class="ret-billede" src="" alt="">
+
+     </article>
+    </template>
+
+    <script>
+        let retter = [];
+        let kategoriFilter = "alle";
+
+
+        document.addEventListener("DOMContentLoaded", start);
+
+        function start() {
+            hentJson();
+            forberedFiltrering();
+        }
+
+        function forberedFiltrering() {
+            document.querySelectorAll("nav button").forEach(knap => {
+                knap.addEventListener("click", () => {
+
+
+                    kategoriFilter = knap.getAttribute("data-menu");
+                    visRetter();
+                });
+            });
+
+        }
+
+        async function hentJson() {
+            let jsonData = await fetch("menu.json");
+            retter = await jsonData.json();
+            visRetter();
+        }
+
+
+
+        function visRetter() {
+            // globale variabeler
+            let display = document.querySelector(".ret-display");
+            let temp = document.querySelector(".ret-template");
+
+            display.textContent = "";
+
+            retter.forEach(ret => {
+
+                if (ret.kategori == kategoriFilter || kategoriFilter == "alle") {
+                    console.log(ret.kategori, kategoriFilter);
+
+                    //lav en klon af template
+                    let klon = temp.cloneNode(true).content;
+
+                    //indsæt data i html
+                    klon.querySelector("h2").textContent = ret.navn;
+                    klon.querySelector(".ret-billede").src = "assets/imgs/small/" + ret.billede + "-sm.jpg";
+                    ret.billede.jpg;
+
+                    klon.querySelector(".ret-billede").alt = "billede af" + ret.navn;
+                    klon.querySelector(".ret-kortbeskrivelse").textContent = ret.kortbeskrivelse;
+                    klon.querySelector(".ret-pris").textContent = ret.pris;
+
+
+
+                    //placer klon i html
+                    display.appendChild(klon);
+                }
+            });
+        }
+
+    </script>
 
 
     <footer>
@@ -103,51 +158,6 @@
     </footer>
 
 
-    <script>
-        document.addEventListener("DOMContentLoaded", hentJson);
-
-        let menu;
-
-        async function hentJson() {
-
-            let myJson = await fetch("menu.json");
-            menu = await myJson.json();
-            console.log(menu[0].navn);
-            visMenu();
-        }
-
-        function visMenu() {
-
-            let modtager = document.querySelector("#menucontainer");
-            let temp = document.querySelector("#ret-template");
-
-            //Løb personlisten igennem og lav en klon
-            menu.forEach(ret => {
-
-                let klon = temp.cloneNode(true).content;
-
-                klon.querySelector("#ret-id").textContent = ret.id;
-
-                klon.querySelector("#ret-kategori").textContent = ret.kategori;
-
-                klon.querySelector("#ret-navn").textContent = ret.navn;
-
-                klon.querySelector("#ret-pris").textContent = "pris " + ret.pris + ",-";
-
-                klon.querySelector("#ret-kortbeskrivelse").textContent = ret.kortbeskrivelse;
-
-                klon.querySelector("#ret-langbeskrivelse").textContent = ret.langbeskrivelse;
-
-                klon.querySelector("#ret-oprindelsesregion").textContent = ret.oprindelsesregion;
-
-                klon.querySelector("img").src = "assets/imgs/small/" + ret.billede + "-sm.jpg";
-
-
-                //placer klon i html
-                modtager.appendChild(klon);
-            });
-        }
-    </script>
 
 </body>
 
