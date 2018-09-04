@@ -34,7 +34,9 @@
             display: grid;
         }
 
-        @media screen and (min-width:480px) {
+        /**--------- mediaQ -----------------**/
+
+        / @media screen and (min-width:480px) {
             section {
                 grid-template-columns: repeat(2, 1fr)
             }
@@ -46,13 +48,64 @@
             }
         }
 
+        /**--------- modal vindue -----------------**/
+
+        #modal {
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, .7);
+            text-align: center;
+            /* display: none;*/
+            position: fixed;
+
+            opacity: 0;
+            pointer-events: none;
+            transition: 1s;
+        }
+
+        #modal-content {
+            background-color: rgba(250, 250, 250, 1);
+            width: 70vw;
+            height: 70vh;
+            margin: auto;
+
+        }
+
+        #modal.vis {
+            /*            display: block;*/
+            opacity: 1;
+            pointer-events: all;
+            transition: 0.5s;
+        }
+
+        .modal-billede {
+            max-width: 500px;
+        }
     </style>
+
 
 </head>
 
 
 <body>
+
+    <!--------- modal vindue ----------------->
+
+    <section id="modal">
+
+        <div id="modal-content">
+            <button>Close</button>
+            <h2 class="modal-navn"></h2>
+            <img class="modal-billede" src="" alt="">
+            <p class="modal-langbeskrivelse"></p>
+
+        </div>
+
+    </section>
+
     <header>
+
+        <!------------ menu knapper ----------------->
         <h1>Menu</h1>
         <nav>
             <button class="menu-item" data-menu="forretter">Forretter</button>
@@ -63,6 +116,7 @@
     </header>
 
     <section class="ret-display"> </section>
+
 
 
 
@@ -134,9 +188,14 @@
                     klon.querySelector(".ret-billede").src = "assets/imgs/small/" + ret.billede + "-sm.jpg";
                     ret.billede.jpg;
 
+                    klon.querySelector(".ret-billede").addEventListener("click", () => {
+                        visModal(ret);
+                    });
+
+
                     klon.querySelector(".ret-billede").alt = "billede af" + ret.navn;
                     klon.querySelector(".ret-kortbeskrivelse").textContent = ret.kortbeskrivelse;
-                    klon.querySelector(".ret-pris").textContent = ret.pris;
+                    klon.querySelector(".ret-pris").textContent = "pris " + ret.pris + ",-";
 
 
 
@@ -146,6 +205,22 @@
             });
         }
 
+
+        function visModal(retten) {
+            let modal = document.querySelector("#modal");
+
+            modal.classList.add("vis");
+            modal.querySelector(".modal-navn").textContent = retten.navn;
+            modal.querySelector(".modal-billede").src = "assets/imgs/small/" + retten.billede + "-sm.jpg";
+            modal.querySelector(".modal-billede").alt = "Foto af" + retten.navn;
+
+            modal.querySelector(".modal-langbeskrivelse").textContent = retten.langbeskrivelse;
+
+
+            modal.querySelector("button").addEventListener("click", () => {
+                modal.classList.remove("vis");
+            });
+        }
     </script>
 
 
