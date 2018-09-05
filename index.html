@@ -7,80 +7,124 @@
     <title>Bistro Babushka</title>
     <link rel="stylesheet" href="">
 
+    <link href="https://fonts.googleapis.com/css?family=Russo+One" "https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+
+
+
     <style>
         img {
-            width: 300px;
+            width: 100%;
         }
 
-        /*
-        html {
-            background-color: darkorange;
+        header {
+            text-align: center;
         }
-*/
+
+        h1 {
+            font-family: 'Russo One', sans-serif;
+        }
+
+        h2 {
+            font-family: 'Ubuntu', sans-serif;
+            font-size: 18px;
+        }
+
+        p {
+            font-family: 'Ubuntu', sans-serif;
+            font-size: 14px;
+        }
+
+        html {
+            background-color: rgb(248, 246, 246);
+        }
 
         article {
-            padding: 20px;
+            padding: 2em;
+            background-color: white;
         }
 
         article:nth-child(odd) {
-            background: #ffaab7;
+            background: #fafafa;
 
         }
 
-
         section {
-            border: 4px solid yellow;
-            padding: 10px;
+            /* border: 4px solid yellow;*/
+            padding: 25px;
             display: grid;
+        }
+
+
+        footer {
+            background-color: #fd8f20;
+            text-align: center;
+        }
+
+
+        button {
+            background-color: #fd9b27;
+            border: none;
+            color: #e20303;
+            padding: 5px 10px;
+            font-size: 12px;
         }
 
         /**--------- mediaQ -----------------**/
 
-        / @media screen and (min-width:480px) {
+        @media screen and (min-width:250px) {
             section {
-                grid-template-columns: repeat(2, 1fr)
+                grid-template-columns: repeat(1, 1fr)
             }
-        }
 
-        @media screen and (min-width:900px) {
-            section {
-                grid-template-columns: repeat(3, 1fr)
+            @media screen and (min-width:600px) {
+                section {
+                    grid-template-columns: repeat(2, 1fr)
+                }
+
+                @media screen and (min-width:900px) {
+                    section {
+                        grid-template-columns: repeat(3, 1fr)
+                    }
+                }
             }
-        }
 
-        /**--------- modal vindue -----------------**/
+            @media screen and (min-width:550px) {
 
-        #modal {
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, .7);
-            text-align: center;
-            /* display: none;*/
-            position: fixed;
+                .modal-billede {
+                    max-width: 900px;
+                }
+            }
 
-            opacity: 0;
-            pointer-events: none;
-            transition: 1s;
-        }
 
-        #modal-content {
-            background-color: rgba(250, 250, 250, 1);
-            width: 70vw;
-            height: 70vh;
-            margin: auto;
+            /**--------- modal vindue CSS-----------------**/
+            #modal {
+                width: 100vw;
+                height: 100vh;
+                position: fixed;
+                text-align: center;
+                background-color: rgba(0, 0, 0, .7);
+                opacity: 0;
+                pointer-events: none;
+                transition: 1s;
+                overflow: scroll;
+            }
+            #modal-content {
+                width: 90vw;
+                height: auto;
+                background-color: rgba(250, 250, 250, 1);
+                margin: auto;
+                margin-top: 0vw;
+                padding: 1em;
+            }
+            #modal-content button {
+                margin: 1em;
+            }
 
-        }
-
-        #modal.vis {
-            /*            display: block;*/
-            opacity: 1;
-            pointer-events: all;
-            transition: 0.5s;
-        }
-
-        .modal-billede {
-            max-width: 500px;
-        }
+            #modal.vis {
+                opacity: 1;
+                pointer-events: all;
+                transition: 0.3s;
+            }
     </style>
 
 
@@ -89,7 +133,7 @@
 
 <body>
 
-    <!--------- modal vindue ----------------->
+    <!--------- modal vindue HTML----------------->
 
     <section id="modal">
 
@@ -105,9 +149,15 @@
 
     <header>
 
+
+        <!------------ billede i toppen ----------------->
+        <img src="bistrobabushka.jpg" alt="forside billede">
+
+
         <!------------ menu knapper ----------------->
         <h1>Menu</h1>
         <nav>
+            <button class="menu-item" data-menu="alle">Alle</button>
             <button class="menu-item" data-menu="forretter">Forretter</button>
             <button class="menu-item" data-menu="hovedretter">Hovedretter</button>
             <button class="menu-item" data-menu="desserter">Desserter</button>
@@ -127,11 +177,12 @@
         <p class="ret-id"> </p>
         <p class="ret-kategori"> </p>
          <h2 class="ret-navn"> </h2>
+         <img class="ret-billede" src="" alt="">
           <p class="ret-pris"> </p>
            <p class="ret-kortbeskrivelse"> </p>
             <p class="ret-langbeskrivelse"> </p>
             <p class="ret-oprindelsesregion"> </p>
-         <img class="ret-billede" src="" alt="">
+
 
      </article>
     </template>
@@ -147,7 +198,7 @@
             hentJson();
             forberedFiltrering();
         }
-
+        //Filtrering af retter
         function forberedFiltrering() {
             document.querySelectorAll("nav button").forEach(knap => {
                 knap.addEventListener("click", () => {
@@ -167,7 +218,7 @@
         }
 
 
-
+        //Vis retter, billeder og tekst
         function visRetter() {
             // globale variabeler
             let display = document.querySelector(".ret-display");
@@ -192,12 +243,9 @@
                         visModal(ret);
                     });
 
-
                     klon.querySelector(".ret-billede").alt = "billede af" + ret.navn;
                     klon.querySelector(".ret-kortbeskrivelse").textContent = ret.kortbeskrivelse;
                     klon.querySelector(".ret-pris").textContent = "pris " + ret.pris + ",-";
-
-
 
                     //placer klon i html
                     display.appendChild(klon);
@@ -205,7 +253,7 @@
             });
         }
 
-
+        //Vis modal vindue
         function visModal(retten) {
             let modal = document.querySelector("#modal");
 
@@ -223,13 +271,14 @@
         }
     </script>
 
-
     <footer>
+
         <p>Adresse:<br> Grønnegade 97 <br> 1234 København K</p>
 
         <p>
             Åbningstider: <br> Mandag - fredag 10:30 - 22:00 <br> Lørdag 12:00 - 23:00
         </p>
+
     </footer>
 
 
